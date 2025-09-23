@@ -1,12 +1,12 @@
+// Replace the content of src/pages/HabitTracker.jsx with this:
+
 import React, { useState, useEffect } from "react";
-import { Habit } from "@/api/entities";
-import { HabitEntry } from "@/api/entities";
+import { Habit, HabitEntry } from "@/api/mockData"; // Changed from @/api/entities
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Target, Plus, Calendar, ArrowLeft, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format, startOfWeek, addDays, subDays } from "date-fns";
-import _ from 'lodash';
 
 import HabitForm from "../components/habit-tracker/HabitForm";
 import WeeklyProgressCards from "../components/habit-tracker/WeeklyProgressCards";
@@ -30,10 +30,14 @@ export default function HabitTrackerPage() {
     setIsLoading(true);
     try {
       const [habitsData, entriesData] = await Promise.all([
-        Habit.filter({ is_active: true }, "-created_date"),
+        Habit.list("-created_date"), // Updated to use mock data method
         HabitEntry.list("-created_date", 1000)
       ]);
-      setHabits(habitsData);
+      
+      // Filter active habits (since mock data doesn't have complex filtering)
+      const activeHabits = habitsData.filter(habit => habit.is_active !== false);
+      
+      setHabits(activeHabits);
       setHabitEntries(entriesData);
     } catch (error) {
       console.error("Error loading habits:", error);
@@ -61,7 +65,7 @@ export default function HabitTrackerPage() {
       e => e.habit_id === habitId && e.date === dateStr
     );
 
-    const newValue = habit.target_value;
+    const newValue = habit.target_value || 1;
     const completed = true;
 
     if (existingEntry) {
@@ -127,42 +131,91 @@ export default function HabitTrackerPage() {
           )}
         </AnimatePresence>
 
-        {/* Weekly Cards & Quick Actions */}
+        {/* Weekly Navigation */}
         <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm mb-6">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-white flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-400"/>
-              This Week's Progress
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Button size="icon" variant="outline" className="bg-slate-800 border-slate-700" onClick={() => setCurrentWeekStart(subDays(currentWeekStart, 7))}>
-                <ArrowLeft className="w-4 h-4"/>
-              </Button>
-               <Button size="icon" variant="outline" className="bg-slate-800 border-slate-700" onClick={() => setCurrentWeekStart(addDays(currentWeekStart, 7))}>
-                <ArrowRight className="w-4 h-4"/>
-              </Button>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-emerald-400" />
+                Week of {format(currentWeekStart, 'MMM d, yyyy')}
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentWeekStart(subDays(currentWeekStart, 7))}
+                  className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentWeekStart(startOfWeek(new Date()))}
+                  className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
+                >
+                  Today
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentWeekStart(addDays(currentWeekStart, 7))}
+                  className="bg-slate-800 border-slate-600 text-white hover:bg-slate-700"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <WeeklyProgressCards 
-              weekDates={weekDates}
-              habits={habits}
-              habitEntries={habitEntries}
-              isLoading={isLoading}
-            />
-          </CardContent>
         </Card>
 
-        {/* Lower Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Quick Actions */}
+          {habits.length > 0 && (
             <QuickActions habits={habits} onQuickLog={handleQuickLog} />
-            <OverallProgress habits={habits} habitEntries={habitEntries} />
-          </div>
-          <div className="lg:col-span-2">
-             <HabitVisualization habits={habits} habitEntries={habitEntries} />
-          </div>
+          )}
+          
+          {/* Overall Progress - only show if we have habits */}
+          {habits.length > 0 && (
+            <div className="lg:col-span-2">
+              <OverallProgress habits={habits} habitEntries={habitEntries} />
+            </div>
+          )}
         </div>
+
+        {/* Weekly Progress Cards */}
+        {habits.length > 0 ? (
+          <WeeklyProgressCards 
+            habits={habits} 
+            habitEntries={habitEntries}
+            weekDates={weekDates}
+            onQuickLog={handleQuickLog}
+          />
+        ) : (
+          !isLoading && (
+            <Card className="bg-slate-900/50 border-slate-700/50 backdrop-blur-sm">
+              <CardContent className="text-center py-12">
+                <Target className="w-16 h-16 mx-auto text-slate-500 mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">No Habits Yet</h3>
+                <p className="text-slate-400 mb-6">Create your first habit to start building consistency</p>
+                <Button 
+                  onClick={() => setShowForm(true)}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Create Your First Habit
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        )}
+
+        {/* Habit Visualization */}
+        {habits.length > 0 && (
+          <div className="mt-8">
+            <HabitVisualization habits={habits} habitEntries={habitEntries} />
+          </div>
+        )}
       </div>
     </div>
   );

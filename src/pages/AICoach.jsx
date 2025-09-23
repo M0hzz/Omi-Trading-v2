@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { InvokeLLM } from "@/api/integrations";
-import { MoodEntry, MarketIntelligence, PsychologyPattern } from "@/api/entities";
+import { InvokeLLM, MoodEntry, MarketIntelligence, PsychologyPattern } from "@/api/mockData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

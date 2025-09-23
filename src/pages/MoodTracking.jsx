@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MoodEntry } from "@/api/entities";
+import { MoodEntry } from "@/api/mockData";
 import { Button } from "@/components/ui/button";
 import { Activity, PlusCircle, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

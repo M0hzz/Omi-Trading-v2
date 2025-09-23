@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PsychologyPattern } from "@/api/entities";
+import { PsychologyPattern } from "@/api/mockData";
 import { BrainCircuit } from "lucide-react";
 import PatternCard from "../components/psychology-patterns/PatternCard";
 import PatternFilters from "../components/psychology-patterns/PatternFilters";

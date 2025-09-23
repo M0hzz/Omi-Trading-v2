@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MarketIntelligence as MarketIntelligenceEntity } from "@/api/entities";
+import { MarketIntelligence as MarketIntelligenceEntity } from "@/api/mockData";
 import { TrendingUp, Newspaper } from "lucide-react";
 
 import MarketFilters from "../components/market-intelligence/MarketFilters";
