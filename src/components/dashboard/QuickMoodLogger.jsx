@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MoodEntry } from "@/api/mockData";
+import { MoodEntry } from "@/api/services";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

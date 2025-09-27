@@ -1,7 +1,7 @@
 // Replace the content of src/pages/HabitTracker.jsx with this:
 
 import React, { useState, useEffect } from "react";
-import { Habit, HabitEntry } from "@/api/mockData"; // Changed from @/api/entities
+import { Habit, HabitEntry } from "@/api/services"; // Changed from @/api/entities
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Target, Plus, Calendar, ArrowLeft, ArrowRight } from "lucide-react";

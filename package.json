@@ -1,16 +1,16 @@
 {
-  "name": "omi-trading-v2",
+  "name": "omi-trading-psychology-v2",
   "private": true,
   "version": "1.0.0",
-  "description": "Trading Psychology & Mood Tracking Application",
+  "description": "Advanced Trading Psychology & Mood Tracking Application",
   "type": "module",
   "keywords": [
     "trading",
-    "psychology",
+    "psychology", 
     "mood-tracking",
+    "ai",
     "react",
-    "vite",
-    "tailwind"
+    "supabase"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -20,9 +20,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "type-check": "tsc --noEmit"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -78,6 +81,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/ui": "^1.2.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
@@ -87,7 +91,8 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.6.3",
-    "vite": "^6.1.0"
+    "vite": "^6.1.0",
+    "vitest": "^1.2.0"
   },
   "engines": {
     "node": ">=16.0.0",
